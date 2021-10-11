@@ -14,35 +14,40 @@ object DateUtils {
     private const val DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm"
     private const val SIMPLE_DATE_FORMAT = "yyyy-MM-dd"
 
-    private val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)
-    private val formatterEN = SimpleDateFormat(DATE_TIME_PATTERN, Locale.ENGLISH)
+    private val dateTimeFormatter: DateTimeFormatter =
+        DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)
+    private val formatterDateTime = SimpleDateFormat(DATE_TIME_PATTERN, Locale.ENGLISH)
+    private val formatterDate = SimpleDateFormat(SIMPLE_DATE_FORMAT, Locale.ENGLISH)
 
     fun initDatePicker(context: Context, editText: EditText) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
-            DatePickerDialog(
-                context,
-                { _, y, m, dayOfMonth ->
-                    calendar.set(Calendar.YEAR, y)
-                    calendar.set(Calendar.MONTH, m)
-                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    val formatter =
-                        SimpleDateFormat(SIMPLE_DATE_FORMAT, Locale.FRANCE)
-                    editText.setText(formatter.format(calendar.time))
-                },
-                year,
-                month,
-                day
-            ).show()
+        DatePickerDialog(
+            context,
+            { _, y, m, dayOfMonth ->
+                calendar.set(Calendar.YEAR, y)
+                calendar.set(Calendar.MONTH, m)
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                val formatter =
+                    SimpleDateFormat(SIMPLE_DATE_FORMAT, Locale.FRANCE)
+                editText.setText(formatter.format(calendar.time))
+            },
+            year,
+            month,
+            day
+        ).show()
     }
 
-    fun parse(date: Date): String {
-        return LocalDate.parse(format(date), dateTimeFormatter).toString()
-    }
+    fun parseToString(date: Date) =
+        LocalDate.parse(format(date), dateTimeFormatter).toString()
 
-    private fun format(date: Date): String {
-        return formatterEN.format(date)
-    }
+    fun parseToLong(string: String) =
+        formatterDate.parse(string)!!.time
+
+    private fun format(date: Date) =
+        formatterDateTime.format(date)
+
+    fun isValidDate(date: String?, regEx: Regex) = date?.matches(regEx) ?: false
 }

@@ -37,7 +37,7 @@
             app:destination="@id/ProfileFragment">
             <argument
                 android:name="User"
-                app:argType="com.sncf.android.smarthomeapp.ui.model.User" />
+                app:argType="com.sncf.android.smarthomeapp.data.model.User" />
         </action>
     </fragment>
     <fragment
@@ -60,7 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/ProfileFragment"
-        android:name="com.sncf.android.smarthomeapp.ui.profil.ProfileFragment"
+        android:name="com.sncf.android.smarthomeapp.ui.profil.view.ProfileFragment"
         android:label="@string/profile_fragment_label"
         tools:layout="@layout/fragment_profil">
     </fragment>

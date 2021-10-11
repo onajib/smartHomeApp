@@ -1,11 +1,13 @@
 package com.sncf.android.smarthomeapp.ui.main
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.sncf.android.smarthomeapp.databinding.ActivityMainBinding
+import com.sncf.android.smarthomeapp.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -20,19 +22,31 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-
         initViewModelObservations()
-
-        mainViewModel.getData()
     }
 
     private fun initViewModelObservations() {
-        mainViewModel.errorMessage.observe(this, {
-            Toast.makeText(
-                this,
-                resources.getString(it),
-                Toast.LENGTH_LONG
-            ).show()
-        })
+        mainViewModel.checkDbData().observe(this) {
+            if (it == null) {
+                mainViewModel.getData()
+            }
+        }
+
+        mainViewModel.data.observe(this) {
+            when (it) {
+                is Resource.Success ->
+                    it.data?.let { data ->
+                        mainViewModel.insertDevices(data.devices)
+                        mainViewModel.insertUser(data.user)
+                    }
+                is Resource.Error ->
+                    it.message?.let { message ->
+                        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+                        Timber.e(this.javaClass.simpleName, "Error: $message")
+                    }
+                else -> Toast.makeText(applicationContext, "Loading data", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 }

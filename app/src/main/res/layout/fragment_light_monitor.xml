@@ -73,9 +73,21 @@
             android:valueFrom="0.0"
             android:valueTo="100.0"
             app:thumbColor="@color/BluePressed"
-            app:trackColorActive="@color/teal_200"
-            app:trackColorInactive="@color/grey" />
-
+            app:trackColorActive="@color/teal_200" />
     </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/b_confirm_light"
+        android:layout_width="@dimen/size200"
+        android:layout_height="@dimen/size60"
+        android:layout_marginBottom="@dimen/margin10"
+        android:backgroundTint="@color/BluePressed"
+        android:paddingStart="@dimen/padding10"
+        android:paddingEnd="@dimen/padding10"
+        android:text="@string/confirm_label"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

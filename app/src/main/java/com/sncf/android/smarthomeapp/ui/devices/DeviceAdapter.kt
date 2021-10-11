@@ -1,46 +1,58 @@
 package com.sncf.android.smarthomeapp.ui.devices
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sncf.android.smarthomeapp.R
-import com.sncf.android.smarthomeapp.ui.model.Device
+import com.sncf.android.smarthomeapp.data.model.Device
+import com.sncf.android.smarthomeapp.databinding.DeviceRowLayoutBinding
 
-class DeviceAdapter(
-    private var deviceList: ArrayList<Device>,
-    private var listener: IDeviceListener? = null
-) :
-    RecyclerView.Adapter<DeviceAdapter.ViewHolder>() {
+class DeviceAdapter(private val listener: OnItemClickListener) :
+    ListAdapter<Device, DeviceAdapter.DeviceViewHolder>(DiffCallback()) {
 
-    fun deleteItem(position: Int) {
-        deviceList.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, deviceList.size)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
+        val binding =
+            DeviceRowLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return DeviceViewHolder(binding)
     }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
-        val v: View = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.device_row_layout, viewGroup, false)
-        return ViewHolder(v)
+    override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
+        val currentItem = getItem(position)
+        holder.bind(currentItem)
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.tvDeviceName.text = deviceList[i].deviceName
-        viewHolder.tvType.text = deviceList[i].productType
-        viewHolder.itemView.setOnClickListener {
-            listener?.onDeviceClicked(deviceList[i])
-            return@setOnClickListener
+    inner class DeviceViewHolder(private val binding: DeviceRowLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.apply {
+                root.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val device = getItem(position)
+                        listener.onItemClick(device)
+                    }
+                }
+            }
+        }
+
+        fun bind(device: Device) {
+            binding.apply {
+                tvDeviceName.text = device.deviceName
+                tvDeviceType.text = device.productType
+            }
         }
     }
 
-    override fun getItemCount(): Int {
-        return deviceList.size
+    interface OnItemClickListener {
+        fun onItemClick(device: Device)
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvDeviceName: TextView = itemView.findViewById(R.id.tv_device_name)
-        val tvType: TextView = itemView.findViewById(R.id.tv_device_type)
+    class DiffCallback : DiffUtil.ItemCallback<Device>() {
+        override fun areItemsTheSame(oldItem: Device, newItem: Device) =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: Device, newItem: Device) =
+            oldItem.deviceName == newItem.deviceName
     }
 }

@@ -44,6 +44,7 @@
             android:layout_weight="1">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/e_last_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/last_mane_label"
@@ -58,6 +59,7 @@
             android:layout_weight="1">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/e_first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/first_name_label"
@@ -76,8 +78,10 @@
         app:layout_constraintTop_toBottomOf="@id/userNameLayout">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/e_birth_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
             android:hint="@string/birth_date_label" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -92,6 +96,7 @@
         app:layout_constraintTop_toBottomOf="@id/ti_birth_date">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/e_street"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/street_label"
@@ -118,6 +123,7 @@
             android:layout_weight="1">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/e_street_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/street_code_label"
@@ -133,6 +139,7 @@
             android:layout_weight="2">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/e_postal_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/postal_code_label"
@@ -151,6 +158,7 @@
         app:layout_constraintTop_toBottomOf="@id/code_layout">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/e_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/city_label"
@@ -168,9 +176,25 @@
         app:layout_constraintTop_toBottomOf="@id/ti_city">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/e_country"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/country_label"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/b_confirm_user"
+        android:layout_width="@dimen/size200"
+        android:layout_height="@dimen/size60"
+        android:layout_marginBottom="@dimen/margin10"
+        android:backgroundTint="@color/BluePressed"
+        android:paddingStart="@dimen/padding10"
+        android:paddingEnd="@dimen/padding10"
+        android:text="@string/confirm_label"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

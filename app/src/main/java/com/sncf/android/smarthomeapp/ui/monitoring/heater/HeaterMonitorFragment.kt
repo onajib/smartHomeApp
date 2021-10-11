@@ -4,22 +4,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.imageview.ShapeableImageView
 import com.sncf.android.smarthomeapp.R
+import com.sncf.android.smarthomeapp.common.ModeEnum
 import com.sncf.android.smarthomeapp.databinding.FragmentHeaterMonitorBinding
-import com.sncf.android.smarthomeapp.domain.common.ModeEnum
 import com.sncf.android.smarthomeapp.ui.model.Heater
-import com.sncf.android.smarthomeapp.utils.Constants
+import com.sncf.android.smarthomeapp.utils.Constants.HEATER_LABEL
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
+@AndroidEntryPoint
 class HeaterMonitorFragment : Fragment() {
 
     private lateinit var binding: FragmentHeaterMonitorBinding
 
     private lateinit var heaterArg: Heater
 
+    private val heaterMonitorViewModel: HeaterMonitorViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.getParcelable<Heater>(Constants.HEATER_LABEL)?.let {
+        arguments?.getParcelable<Heater>(HEATER_LABEL)?.let {
             heaterArg = it
         }
     }
@@ -36,6 +46,7 @@ class HeaterMonitorFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initUi()
         initListeners()
+        initViewModelObservations()
     }
 
     private fun initUi() {
@@ -46,15 +57,36 @@ class HeaterMonitorFragment : Fragment() {
         }
         binding.sHeaterTemperature.value = heaterArg.temperature?.toFloat() ?: 0F
         binding.sHeaterTemperature.setLabelFormatter { value: Float -> "$value°" }
+        activity?.findViewById<ShapeableImageView>(R.id.b_profile)?.visibility = View.GONE
     }
 
     private fun initListeners() {
-        binding.smHeaterMode.setOnCheckedChangeListener { buttonView, isChecked ->
-            // heaterMonitorViewModel.updateHeaterMode
+        binding.bConfirmHeater.setOnClickListener {
+            heaterMonitorViewModel.updateHeaterConfiguration(
+                Heater(
+                    heaterArg.id,
+                    heaterArg.deviceName,
+                    heaterArg.productType,
+                    when {
+                        binding.smHeaterMode.isChecked -> ModeEnum.ON.mode
+                        else -> ModeEnum.OFF.mode
+                    },
+                    binding.sHeaterTemperature.value.toInt()
+                )
+            )
         }
+    }
 
-        binding.sHeaterTemperature.addOnChangeListener { slider, value, fromUser ->
-            // heaterMonitorViewModel.updateHeaterTemperature
+    private fun initViewModelObservations() {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            heaterMonitorViewModel.updatedHeaterEvent.collect { event ->
+                when (event) {
+                    is HeaterMonitorViewModel.UpdatedHeaterEvent.ShowUpdatedHeaterMessage -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack()
+                    }
+                }
+            }
         }
     }
 }

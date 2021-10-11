@@ -1,59 +1,56 @@
 package com.sncf.android.smarthomeapp.ui.main
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.sncf.android.smarthomeapp.base.BaseViewModel
-import com.sncf.android.smarthomeapp.data.persistence.device.DeviceRepo
-import com.sncf.android.smarthomeapp.data.persistence.device.DeviceRepoImpl
-import com.sncf.android.smarthomeapp.domain.usecase.GetDataUseCase
-import com.sncf.android.smarthomeapp.ui.model.Data
-import com.sncf.android.smarthomeapp.ui.model.Device
-import com.sncf.android.smarthomeapp.ui.model.User
-import com.sncf.android.smarthomeapp.utils.ErrorUtils.evaluateErrorCode
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.sncf.android.smarthomeapp.data.model.DataResponse
+import com.sncf.android.smarthomeapp.data.model.Device
+import com.sncf.android.smarthomeapp.data.model.User
+import com.sncf.android.smarthomeapp.repository.DataRepository
+import com.sncf.android.smarthomeapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getDataUseCase: GetDataUseCase,
-) : BaseViewModel(), IMainContract.ViewModel {
+    private val dataRepository: DataRepository
+) : ViewModel() {
 
-    private val _devices = MutableLiveData<ArrayList<Device>>()
+    val data: MutableLiveData<Resource<DataResponse>> = MutableLiveData()
 
-    private val _user = MutableLiveData<User>()
+    var dataResponse: DataResponse? = null
 
-    private val _errorMessage = MutableLiveData<Int>()
+    fun checkDbData() = dataRepository.getUser()
 
-    ///////////////////////////////////////////////////////////////////////////
-    // OVERRIDE
-    ///////////////////////////////////////////////////////////////////////////
+    fun getData() = viewModelScope.launch { dataCall() }
 
-    override val devices: LiveData<ArrayList<Device>>
-        get() = _devices
-
-    override val user: LiveData<User>
-        get() = _user
-
-    override val errorMessage: LiveData<Int>
-        get() = _errorMessage
-
-    override fun getData() {
-        getDataUseCase.execute()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { data -> evaluateData(data) },
-                { _errorMessage.postValue(evaluateErrorCode(it)) })
+    fun insertDevices(device: List<Device>) {
+        viewModelScope.launch {
+            dataRepository.insertDevices(device)
+        }
     }
 
-    private fun evaluateData(data: Data) {
-        val deviceList = mutableListOf<Device>()
-        deviceList.addAll(data.lightDevices)
-        deviceList.addAll(data.heaterDevices)
-        deviceList.addAll(data.rollerDevices)
-        _devices.postValue(deviceList as ArrayList<Device>?)
-        _user.postValue(data.user)
+    fun insertUser(user: User) {
+        viewModelScope.launch {
+            dataRepository.insertUser(user)
+        }
+    }
+
+    private suspend fun dataCall() {
+        data.postValue(Resource.Loading())
+        val response = dataRepository.getData()
+        data.postValue(handleDataResponse(response))
+    }
+
+    private fun handleDataResponse(response: Response<DataResponse>): Resource<DataResponse> {
+        if (response.isSuccessful) {
+            response.body()?.let { resultResponse ->
+                dataResponse
+                return Resource.Success(dataResponse ?: resultResponse)
+            }
+        }
+        return Resource.Error(response.message())
     }
 }

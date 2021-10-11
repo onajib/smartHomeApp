@@ -1,8 +1,12 @@
 package com.sncf.android.smarthomeapp.ui.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 class Roller(
-    id: Int,
-    deviceName: String,
-    productType: String,
+    var id: Int,
+    var deviceName: String,
+    var productType: String,
     var position: Int?,
-) : Device(id, deviceName, productType)
+) : Parcelable

@@ -4,18 +4,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.imageview.ShapeableImageView
 import com.sncf.android.smarthomeapp.R
+import com.sncf.android.smarthomeapp.common.ModeEnum
 import com.sncf.android.smarthomeapp.databinding.FragmentLightMonitorBinding
-import com.sncf.android.smarthomeapp.domain.common.ModeEnum
 import com.sncf.android.smarthomeapp.ui.model.Light
 import com.sncf.android.smarthomeapp.utils.Constants.LIGHT_LABEL
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
+@AndroidEntryPoint
 class LightMonitorFragment : Fragment() {
 
     private lateinit var binding: FragmentLightMonitorBinding
 
     private lateinit var lightArg: Light
+
+    private val lightMonitorViewModel: LightMonitorViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +46,7 @@ class LightMonitorFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initUi()
         initListeners()
+        initViewModelObservations()
     }
 
     private fun initUi() {
@@ -45,15 +56,36 @@ class LightMonitorFragment : Fragment() {
             else -> false
         }
         binding.sLightIntensity.value = lightArg.intensity?.toFloat() ?: 0F
+        activity?.findViewById<ShapeableImageView>(R.id.b_profile)?.visibility = View.GONE
     }
 
     private fun initListeners() {
-        binding.smLightMode.setOnCheckedChangeListener { buttonView, isChecked ->
-            // LightMonitorViewModel.updateLightMode
+        binding.bConfirmLight.setOnClickListener {
+            lightMonitorViewModel.updateLightConfiguration(
+                Light(
+                    lightArg.id,
+                    lightArg.deviceName,
+                    lightArg.productType,
+                    binding.sLightIntensity.value.toInt(),
+                    when {
+                        binding.smLightMode.isChecked -> ModeEnum.ON.mode
+                        else -> ModeEnum.OFF.mode
+                    }
+                )
+            )
         }
+    }
 
-        binding.sLightIntensity.addOnChangeListener { slider, value, fromUser ->
-            // LightMonitorViewModel.updateLightIntensity
+    private fun initViewModelObservations() {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            lightMonitorViewModel.updatedLightEvent.collect { event ->
+                when (event) {
+                    is LightMonitorViewModel.UpdatedLightEvent.ShowUpdatedLightMessage -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack()
+                    }
+                }
+            }
         }
     }
 }
