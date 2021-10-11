@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/size30"
+    tools:context=".ui.monitoring.light.LightMonitorFragment">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_roller_name"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size70"
+        android:layout_weight="4"
+        android:gravity="center_vertical"
+        android:text="@string/device_name_label"
+        android:textColor="@color/BluePressed"
+        android:textSize="@dimen/text25"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Device : Volet roulant - salle de bain" />
+
+    <LinearLayout
+        android:id="@+id/roller_position_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size50"
+        android:orientation="vertical"
+        android:weightSum="5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_roller_name">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_roller_position"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size60"
+            android:gravity="center_vertical"
+            android:text="@string/position_label"
+            android:textSize="@dimen/text20" />
+
+        <FrameLayout
+            android:layout_width="@dimen/size30"
+            android:layout_height="@dimen/size200"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/s_roller_position"
+                android:layout_width="@dimen/size200"
+                android:layout_height="@dimen/size30"
+                android:layout_gravity="center"
+                android:rotation="270"
+                android:stepSize="1.0"
+                android:valueFrom="0.0"
+                android:valueTo="100.0"
+                app:thumbColor="@color/BluePressed"
+                app:trackColorActive="@color/teal_200"
+                app:trackColorInactive="@color/grey" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

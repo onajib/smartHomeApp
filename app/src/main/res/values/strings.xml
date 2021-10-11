@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">smartHomeApp</string>
+    <string name="action_settings">Settings</string>
+    <string name="device_fragment_label">Device Fragment</string>
+    <string name="heater_fragment_label">Heater Fragment</string>
+    <string name="roller_fragment_label">Roller Fragment</string>
+    <string name="profile_fragment_label">Profile Fragment</string>
+    <string name="light_fragment_label">Light Fragment</string>
+    <string name="filter_by_type_label">Filter by type</string>
+    <string name="name_label">name</string>
+    <string name="type_label">type</string>
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="unauthorized_error_message">"Permission Error."</string>
+    <string name="time_out_error_message">"TimeOut Error"</string>
+    <string name="network_error_message">"Network Access Error"</string>
+    <string name="generic_error_message">"Error. Please try later"</string>
+    <string name="on_off_mode_label">ON/OFF</string>
+    <string name="intensity_label">Intensity</string>
+    <string name="mode_label">Mode</string>
+    <string name="temperature_label">Temperature</string>
+    <string name="position_label">Position</string>
+    <string name="device_name_label">Device : %1$s</string>
+    <string name="profile_label">Profile information</string>
+    <string name="first_name_label">First name</string>
+    <string name="last_mane_label">Last name</string>
+    <string name="birth_date_label">Date of birth</string>
+    <string name="street_label">Street</string>
+    <string name="street_code_label">N°</string>
+    <string name="postal_code_label">Postal code</string>
+    <string name="city_label">City</string>
+    <string name="country_label">Country</string>
+</resources>

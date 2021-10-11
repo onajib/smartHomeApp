@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/size30"
+    tools:context=".ui.monitoring.heater.HeaterMonitorFragment">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_heater_name"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size70"
+        android:layout_weight="4"
+        android:gravity="center_vertical"
+        android:text="@string/device_name_label"
+        android:textColor="@color/BluePressed"
+        android:textSize="@dimen/text25"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/heater_mode_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size50"
+        android:weightSum="5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_heater_name">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_heater_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size50"
+            android:layout_weight="4"
+            android:gravity="center_vertical"
+            android:text="@string/mode_label"
+            android:textSize="@dimen/text20" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/sm_heater_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/on_off_mode_label"
+            app:thumbTint="@color/BluePressed" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/heater_intensity_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin30"
+        android:orientation="vertical"
+        android:weightSum="5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/heater_mode_layout">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_heater_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size60"
+            android:gravity="center_vertical"
+            android:text="@string/temperature_label"
+            android:textSize="@dimen/text20" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/s_heater_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:stepSize="0.5"
+            android:valueFrom="7.0"
+            android:valueTo="28.0"
+            app:thumbColor="@color/BluePressed"
+            app:trackColorActive="@color/teal_200"
+            app:trackColorInactive="@color/grey" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

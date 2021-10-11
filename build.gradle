@@ -1,0 +1,89 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext.kotlin_version = "1.4.32"
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:4.0.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.38.1")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.0.0-rc02")
+        classpath "io.realm:realm-gradle-plugin:5.14.0"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.0.0"
+        classpath 'com.hiya:jacoco-android:0.2'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+        mavenCentral()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+task runAllUnitTests(dependsOn: [':app:testDevDebugUnitTest']) {
+    description 'Run all unit tests from app and auth modules '
+    group = 'verification'
+}
+
+task getAllJacocoReports(dependsOn: [':app:jacocoTestDebugUnitTestReport']) {
+    description 'Run JaCoCo'
+    group = 'reporting'
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: runAllUnitTests) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            '**/com/example/databinding/*',
+            '**/com/example/generated/callback/*',
+            '**/android/databinding/*',
+            '**/androidx/databinding/*',
+            '**/di/module/*',
+            '**/*MapperImpl*.*',
+            '**/*$ViewInjector*.*',
+            '**/*$ViewBinder*.*',
+            '**/BuildConfig.*',
+            '**/*Component*.*',
+            '**/*BR*.*',
+            '**/Manifest*.*',
+            '**/*$Lambda$*.*',
+            '**/*Companion*.*',
+            '**/*Module.*',
+            '**/*Dagger*.*',
+            '**/*MembersInjector*.*',
+            '**/*_Factory*.*',
+            '**/*_Provide*Factory*.*',
+            '**/*Extensions*.*',
+            '**/*$Result.*', /* filtering `sealed` and `data` classes */
+            '**/*$Result$*.*'/* filtering `sealed` and `data` classes */
+    ]
+    def debugTree = fileTree(dir: "${getBuildDir()}/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.getProjectDir()}/src/main/java"
+
+    getSourceDirectories().setFrom(files([mainSrc]))
+    getClassDirectories().setFrom(files([debugTree]))
+    getExecutionData().setFrom(files("${buildDir}/jacoco/testDebugUnitTest.exec"))
+}

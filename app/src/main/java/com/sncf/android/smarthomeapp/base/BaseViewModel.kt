@@ -1,0 +1,25 @@
+package com.sncf.android.smarthomeapp.base
+
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.ViewModel
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
+
+abstract class BaseViewModel :
+    LifecycleObserver,
+    ViewModel() {
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DATA
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private val compositeDisposable = CompositeDisposable()
+
+    ///////////////////////////////////////////////////////////////////////////
+    // HELPER
+    ///////////////////////////////////////////////////////////////////////////
+
+    fun Disposable.bindToDisposable() {
+        compositeDisposable.add(this)
+    }
+}

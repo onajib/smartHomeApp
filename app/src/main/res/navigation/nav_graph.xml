@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/DevicesFragment">
+
+    <fragment
+        android:id="@+id/DevicesFragment"
+        android:name="com.sncf.android.smarthomeapp.ui.devices.view.DevicesFragment"
+        android:label="@string/device_fragment_label"
+        tools:layout="@layout/fragment_devices">
+
+        <action
+            android:id="@+id/action_DevicesFragment_to_HeaterMonitorFragment"
+            app:destination="@id/HeaterMonitorFragment">
+            <argument
+                android:name="Heater"
+                app:argType="com.sncf.android.smarthomeapp.ui.model.Heater" />
+        </action>
+        <action
+            android:id="@+id/action_DevicesFragment_to_LightMonitorFragment"
+            app:destination="@id/LightMonitorFragment">
+            <argument
+                android:name="Light"
+                app:argType="com.sncf.android.smarthomeapp.ui.model.Light" />
+        </action>
+        <action
+            android:id="@+id/action_DevicesFragment_to_RollerMonitorFragment"
+            app:destination="@id/RollerMonitorFragment">
+            <argument
+                android:name="RollerShutter"
+                app:argType="com.sncf.android.smarthomeapp.ui.model.Roller" />
+        </action>
+        <action
+            android:id="@+id/action_DevicesFragment_to_ProfileFragment"
+            app:destination="@id/ProfileFragment">
+            <argument
+                android:name="User"
+                app:argType="com.sncf.android.smarthomeapp.ui.model.User" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/HeaterMonitorFragment"
+        android:name="com.sncf.android.smarthomeapp.ui.monitoring.heater.HeaterMonitorFragment"
+        android:label="@string/heater_fragment_label"
+        tools:layout="@layout/fragment_heater_monitor">
+    </fragment>
+    <fragment
+        android:id="@+id/LightMonitorFragment"
+        android:name="com.sncf.android.smarthomeapp.ui.monitoring.light.LightMonitorFragment"
+        android:label="@string/light_fragment_label"
+        tools:layout="@layout/fragment_light_monitor">
+    </fragment>
+    <fragment
+        android:id="@+id/RollerMonitorFragment"
+        android:name="com.sncf.android.smarthomeapp.ui.monitoring.roller.RollerMonitorFragment"
+        android:label="@string/roller_fragment_label"
+        tools:layout="@layout/fragment_roller_monitor">
+    </fragment>
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.sncf.android.smarthomeapp.ui.profil.ProfileFragment"
+        android:label="@string/profile_fragment_label"
+        tools:layout="@layout/fragment_profil">
+    </fragment>
+
+</navigation>
